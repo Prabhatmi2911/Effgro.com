@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign In & Register Combined</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #eaf1ed;
+      font-family: 'Jomolhari', 'Times New Roman', Times, serif;
+      min-height: 100vh;
+      min-width: 100vw;
+      box-sizing: border-box;
+    }
+    .auth-container {
+      min-height: 100vh;
+      min-width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .header-area {
+      margin-bottom: 18px;
+      width: 100%;
+      max-width: 410px;
+      text-align: center;
+      /* keep same width as form for alignment */
+    }
+    .welcome-title {
+      font-size: 2rem;
+      margin-bottom: 8px;
+      margin-top: 0;
+      letter-spacing: 0.5px;
+    }
+    .subtitle {
+      font-size: 1rem;
+      font-family: 'Arial', sans-serif;
+      color: #232323;
+      opacity: 0.85;
+      margin-bottom: 0;
+      line-height: 1.2;
+    }
+    .auth-box {
+      background: #fff;
+      border-radius: 14px;
+      padding: 38px 34px 28px 34px;
+      min-width: 370px;
+      max-width: 410px;
+      box-shadow: 0 0 0 0 rgba(0,0,0,0.04);
+      position: relative;
+    }
+    .toggle-buttons {
+      display: flex;
+      width: 100%;
+      margin-bottom: 28px;
+    }
+    .toggle-btn {
+      flex: 1;
+      font-family: 'Arial', sans-serif;
+      font-size: 1rem;
+      padding: 10px 0;
+      border-radius: 7px;
+      border: 1.2px solid #232323;
+      background: #fff;
+      color: #232323;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      margin-right: 10px;
+      outline: none;
+    }
+    .toggle-btn:last-child {
+      margin-right: 0;
+    }
+    .toggle-btn.active {
+      background: #232323;
+      color: #fff;
+      border: 1.2px solid #232323;
+    }
+    .form-slider {
+      width: 100%;
+      min-height: 350px;
+      position: relative;
+      overflow: hidden;
+    }
+    .form-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      transition:
+        transform 0.5s cubic-bezier(.86,0,.07,1),
+        opacity 0.5s cubic-bezier(.86,0,.07,1);
+      opacity: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: transparent;
+    }
+    .form-content.active {
+      transform: translateX(0);
+      opacity: 1;
+      z-index: 2;
+      pointer-events: auto;
+    }
+    .form-content.slide-left {
+      transform: translateX(-100%);
+      opacity: 0;
+      z-index: 1;
+    }
+    .form-content.slide-right {
+      transform: translateX(100%);
+      opacity: 0;
+      z-index: 1;
+    }
+    .input-field {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 10px;
+      margin-bottom: 15px;
+      border: 1.2px solid #232323;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-family: 'Arial', sans-serif;
+      background: #fff;
+      color: #232323;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-field:focus {
+      border-color: #aaa;
+    }
+    .input-field.short {
+      width: 48%;
+      margin-bottom: 15px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      gap: 10px;
+    }
+    .main-btn {
+      width: 100%;
+      padding: 10px 0;
+      margin-top: 10px;
+      background: #232323;
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-family: 'Arial', sans-serif;
+      cursor: pointer;
+      margin-bottom: 14px;
+      font-weight: normal;
+      transition: background 0.2s;
+    }
+    .main-btn:hover {
+      background: #444;
+    }
+    .forgot {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 2px;
+    }
+    .forgot-link {
+      color: #232323;
+      font-size: 0.95rem;
+      text-decoration: underline;
+      cursor: pointer;
+      font-family: 'Arial', sans-serif;
+    }
+    .help-text {
+      text-align: center;
+      width: 100%;
+      color: #232323;
+      font-size: 0.91rem;
+      font-family: 'Arial', sans-serif;
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+    @media (max-width: 600px) {
+      .auth-box, .header-area {
+        min-width: 94vw;
+        max-width: 98vw;
+        padding-left: 2vw;
+        padding-right: 2vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="header-area" id="header-area">
+      <!-- Welcome title and subtitle will be injected here by JS -->
+    </div>
+    <div class="auth-box">
+      <div class="toggle-buttons">
+        <button class="toggle-btn active" id="show-signin" type="button" tabindex="0">SIGN IN</button>
+        <button class="toggle-btn" id="show-register" type="button" tabindex="0">REGISTER</button>
+      </div>
+      <div class="form-slider">
+        <!-- Sign In Form -->
+        <form class="form-content signin-form active" autocomplete="off" id="signin-form">
+          <input type="email" placeholder="Email" class="input-field" name="signin-email" required autocomplete="username" tabindex="0">
+          <input type="password" placeholder="Password" class="input-field" name="signin-password" required autocomplete="current-password" tabindex="0">
+          <button class="main-btn" type="submit" tabindex="0">SIGN IN</button>
+          <div class="forgot">
+            <a href="#" class="forgot-link" tabindex="0">Forgot Your Password?</a>
+          </div>
+          <div class="help-text">Need help? Contact us</div>
+        </form>
+        <!-- Register Form -->
+        <form class="form-content register-form" autocomplete="off" id="register-form">
+          <div class="row">
+            <input type="text" placeholder="First Name" class="input-field short" name="register-firstname" required tabindex="0">
+            <input type="text" placeholder="Last Name" class="input-field short" name="register-lastname" required tabindex="0">
+          </div>
+          <input type="email" placeholder="Email" class="input-field" name="register-email" required autocomplete="username" tabindex="0">
+          <input type="password" placeholder="Password" class="input-field" name="register-password" required autocomplete="new-password" tabindex="0">
+          <input type="password" placeholder="Confirm Password" class="input-field" name="register-confirm-password" required autocomplete="new-password" tabindex="0">
+          <button class="main-btn" type="submit" tabindex="0">CREATE ACCOUNT</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Header text for sign in and register
+    const headers = [
+      {
+        title: "Welcome Back!",
+        subtitle: "Sign in to stay, strand by strand"
+      },
+      {
+        title: "Welcome!",
+        subtitle: "Get ready to flaunt your hair like never before<br>Register and find your perfect match"
+      }
+    ];
+    function updateHeader(isSignIn) {
+      const headerArea = document.getElementById('header-area');
+      const idx = isSignIn ? 0 : 1;
+      headerArea.innerHTML = `
+        <div class="welcome-title">${headers[idx].title}</div>
+        <div class="subtitle">${headers[idx].subtitle}</div>
+      `;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const btnSignIn = document.getElementById('show-signin');
+      const btnRegister = document.getElementById('show-register');
+      const signInForm = document.querySelector('.signin-form');
+      const registerForm = document.querySelector('.register-form');
+      const signinFormEl = document.getElementById('signin-form');
+      const registerFormEl = document.getElementById('register-form');
+
+      // Set initial header for sign in
+      updateHeader(true);
+
+      function showForm(showSignIn) {
+        if (showSignIn) {
+          btnSignIn.classList.add('active');
+          btnRegister.classList.remove('active');
+          signInForm.classList.add('active');
+          signInForm.classList.remove('slide-right');
+          signInForm.classList.remove('slide-left');
+          registerForm.classList.remove('active');
+          registerForm.classList.remove('slide-right');
+          registerForm.classList.add('slide-left');
+          updateHeader(true);
+          setTimeout(() => {
+            signInForm.querySelector('input').focus();
+          }, 400);
+        } else {
+          btnSignIn.classList.remove('active');
+          btnRegister.classList.add('active');
+          registerForm.classList.add('active');
+          registerForm.classList.remove('slide-left');
+          registerForm.classList.remove('slide-right');
+          signInForm.classList.remove('active');
+          signInForm.classList.remove('slide-left');
+          signInForm.classList.add('slide-right');
+          updateHeader(false);
+          setTimeout(() => {
+            registerForm.querySelector('input').focus();
+          }, 400);
+        }
+      }
+
+      btnSignIn.addEventListener('click', () => showForm(true));
+      btnRegister.addEventListener('click', () => showForm(false));
+
+      // Keyboard support for toggling using Tab/Enter/Space/Arrow keys
+      btnSignIn.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          showForm(true);
+        }
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          btnRegister.focus();
+        }
+      });
+      btnRegister.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+          e.preventDefault();
+          showForm(false);
+        }
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          btnSignIn.focus();
+        }
+      });
+
+      // Accessibility: pressing left/right to switch toggle when on a field, Ctrl+Arrow works as well
+      document.addEventListener('keydown', function(e) {
+        if (
+          (e.ctrlKey && e.key === 'ArrowLeft') ||
+          (document.activeElement.tagName === 'INPUT' && e.key === 'ArrowLeft')
+        ) {
+          btnSignIn.focus();
+        }
+        if (
+          (e.ctrlKey && e.key === 'ArrowRight') ||
+          (document.activeElement.tagName === 'INPUT' && e.key === 'ArrowRight')
+        ) {
+          btnRegister.focus();
+        }
+      });
+
+      // Sign In form submit (demo: show values, real: replace with your logic)
+      signinFormEl.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const email = signinFormEl.elements['signin-email'].value;
+        const password = signinFormEl.elements['signin-password'].value;
+        alert("Sign In\nEmail: " + email + "\nPassword: " + password);
+      });
+
+      // Register form submit (demo: show values and check passwords match)
+      registerFormEl.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const firstname = registerFormEl.elements['register-firstname'].value;
+        const lastname = registerFormEl.elements['register-lastname'].value;
+        const email = registerFormEl.elements['register-email'].value;
+        const password = registerFormEl.elements['register-password'].value;
+        const confirm = registerFormEl.elements['register-confirm-password'].value;
+        if (password !== confirm) {
+          alert("Passwords do not match!");
+          registerFormEl.elements['register-confirm-password'].focus();
+          return;
+        }
+        alert(
+          "Register\nFirst Name: " + firstname +
+          "\nLast Name: " + lastname +
+          "\nEmail: " + email +
+          "\nPassword: " + password +
+          "\nConfirm: " + confirm
+        );
+      });
+
+      // Focus first input on page load
+      setTimeout(() => {
+        signInForm.querySelector('input').focus();
+      }, 200);
+    });
+  </script>
+</body>
+</html>
