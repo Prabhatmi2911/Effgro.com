@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Effgro Haircare</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: #eef4f0;
+      color: #111827;
+      margin: 0;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Playfair Display', serif;
+    }
+    /* HEADER */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2rem;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    .menu-btn {
+      display: inline-block;
+      border: none;
+      background: none;
+      cursor: pointer;
+      padding: 0.2em;
+    }
+    .desktop-nav {
+      display: none;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .nav-link {
+      color: #374151;
+      text-decoration: none;
+      transition: color 0.2s;
+      font-size: 1rem;
+    }
+    .nav-link:hover { color: #000; }
+    .nav-quiz {
+      background: #428467;
+      color: #FFFFEF;
+      font-weight: 600;
+      padding: 0.5em 1.5em;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-quiz:hover { background: #498760; }
+    /* MOBILE DROPDOWN */
+    .mobile-dropdown {
+      display: none;
+      flex-direction: column;
+      padding: 0 1.5rem 1.5rem 1.5rem;
+      background: #eef4f0;
+    }
+    .dropdown-link,
+    .dropdown-quiz {
+      display: block;
+      padding: 0.75em 0;
+      text-decoration: none;
+      border-radius: 9999px;
+      text-align: center;
+    }
+    .dropdown-link {
+      color: #374151;
+    }
+    .dropdown-quiz {
+      background: #bbf7d0;
+      color: #166534;
+      font-weight: 600;
+      margin-top: 0.5em;
+    }
+    /* MAIN SECTION */
+    .main-section {
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2.5rem;
+      padding: 3rem 1.5rem;
+    }
+    .main-text {
+      max-width: 36rem;
+    }
+    .main-text h1 {
+      font-size: 3.5rem;
+      font-weight: bold;
+      line-height: 1.5;
+      margin-bottom: 2.5 rem;
+    }
+    .main-text p {
+      margin-bottom: 1.5rem;
+      color: #374151;
+    }
+    .main-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+    .quiz-btn {
+      background: #447b59;
+      color: #f5fef8;
+      font-weight: 500;
+      padding: 0.8em 2em;
+      border-radius: 9999px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .quiz-btn:hover { background: #166534; }
+    .learn-btn {
+      border: 2px solid #a78bfa;
+      color: #7c3aed;
+      font-weight: 500;
+      padding: 0.8em 2em;
+      border-radius: 9999px;
+      text-decoration: none;
+      background: transparent;
+      transition: background 0.2s;
+    }
+    .learn-btn:hover { background: #f3e8ff; }
+    .main-image img {
+      border-radius: 1.25rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      max-width: 100%;
+      height: auto;
+    }
+    .highlight-green { color: #7aa184; }
+    .highlight-purple { color: #a78bfa; }
+    /* PROBLEM SECTION */
+    .problem-section {
+      background: #eef4f0;
+      padding: 4rem 1.5rem;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .section-header h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .section-header p {
+      color: #374151;
+      font-size: 1.1rem;
+      max-width: 36rem;
+      margin: 0 auto;
+    }
+    .problem-grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: 1fr;
+    }
+    .problem-card {
+      background: #dbe6df;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+    }
+    .problem-card h3 {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+    .problem-card p {
+      color: #374151;
+      font-size: 0.97rem;
+    }
+    /* HOW SECTION */
+    .how-section {
+      background: #eef4f0;
+      padding: 4rem 1.5rem;
+    }
+    .how-flex {
+      max-width: 68rem;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+    .how-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+    .how-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+    .how-step.delay-100 { animation-delay: 0.2s; }
+    .how-step.delay-200 { animation-delay: 0.4s; }
+    .how-dot {
+      width: 1.5rem;
+      height: 1.5rem;
+      background: #a78bfa;
+      border-radius: 50%;
+      margin-top: 0.3rem;
+    }
+    .how-step h3 {
+      color: #7c3aed;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .how-step h4 {
+      font-weight: 600;
+      font-size: 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+    .how-step p {
+      color: #374151;
+      font-size: 1rem;
+    }
+    .how-image {
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    .how-image img {
+      max-width: 20rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    /* TRANSFORMATION SECTION */
+    .transformation-section {
+      background: linear-gradient(180deg, #58655f 44%, #6b6578 88%);
+      color: #fff;
+      border-radius: 2rem;
+      margin: 3rem 1.5rem;
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+    .transformation-section h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .transformation-section p {
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+    .transformation-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .quiz-white-btn {
+      background: #D9D9D9;
+      color: #111827;
+      padding: 0.8em 2em;
+      border-radius: 9999px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+    .browse-btn {
+      background: #7A9F91;
+      color: #fff;
+      padding: 0.8em 2em;
+      border-radius: 9999px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+    .transformation-stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      font-size: 1rem;
+    }
+    /* FAQ SECTION */
+    .faq-section {
+      background: #eef4f0;
+      padding: 3rem 1.5rem;
+    }
+    .faq-section h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .faq-list {
+      max-width: 36rem;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .faq-item {
+      background: #e5e7eb;
+      padding: 1rem;
+      border-radius: 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative;
+    }
+    .faq-item:hover {
+      background: #d1fae5;
+    }
+    .faq-question {
+      font-weight: 600;
+      margin-bottom: 0;
+      color: #1e293b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-answer {
+      margin-top: 0.7em;
+      color: #374151;
+      display: none;
+      font-weight: normal;
+      font-size: 0.98em;
+      transition: max-height 0.2s;
+    }
+    .faq-item.open .faq-answer {
+      display: block;
+    }
+    .faq-toggle-icon {
+      font-size: 1.2em;
+      transition: transform 0.2s;
+    }
+    .faq-item.open .faq-toggle-icon {
+      transform: rotate(45deg);
+    }
+    /* NEWSLETTER SECTION */
+    .newsletter-section {
+      background: #f0fdf4;
+      padding: 3rem 1rem;
+      text-align: center;
+    }
+    .newsletter-section h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #111827;
+    }
+    .newsletter-section p {
+      color: #374151;
+      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+    .newsletter-form {
+      margin: 0 auto;
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 28rem;
+      align-items: center;
+    }
+    .newsletter-form input[type="email"] {
+      width: 100%;
+      max-width: 18rem;
+      padding: 0.8em 1em;
+      border-radius: 0.7rem;
+      border: 1px solid #bbf7d0;
+      font-size: 1rem;
+      outline: none;
+    }
+    .newsletter-form button {
+      padding: 0.8em 2em;
+      background: #7A9F91;
+      color: #fff;
+      border: none;
+      border-radius: 0.7rem;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .newsletter-form button:hover { background: #4d9065; }
+    .newsletter-privacy {
+      margin-top: 0.7rem;
+      font-size: 0.95rem;
+      color: #6b7280;
+    }
+    .newsletter-privacy a { color: #111827; text-decoration: underline; }
+    /* FOOTER */
+    .footer {
+      background: #1f2937;
+      color: #fff;
+      padding: 3rem 1.5rem;
+    }
+    .footer-container {
+      max-width: 80rem;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .footer-about h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .footer-about p {
+      color: #d1d5db;
+    }
+    .footer-block h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .footer-block ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      color: #d1d5db;
+    }
+    .footer-block ul li { margin-bottom: 0.6rem; }
+    .footer-block ul li a {
+      color: #d1d5db;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-block ul li a:hover { color: #fff; }
+    @media (min-width: 768px) {
+      .desktop-nav {
+        display: flex;
+      }
+      .menu-btn {
+        display: none;
+      }
+      .main-section {
+        flex-direction: row;
+        padding: 4rem 4rem;
+        gap: 4rem;
+      }
+      .problem-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .how-flex {
+        flex-direction: row;
+      }
+      .how-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .transformation-buttons {
+        flex-direction: row;
+        justify-content: center;
+      }
+      .footer-container {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    @media (min-width: 1024px) {
+      .problem-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    .animate-fadeIn { animation: fadeIn 0.8s ease-out forwards; }
+    .animate-fadeIn.delay-100 { animation-delay: 0.2s; }
+    .animate-fadeIn.delay-200 { animation-delay: 0.4s; }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-left">
+      <button id="menu-btn" class="menu-btn" aria-label="Open navigation menu">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <span class="logo">Effgro</span>
+    </div>
+    <nav id="desktop-nav" class="desktop-nav">
+      <a href="#" class="nav-link">Log in</a>
+      <a href="#" class="nav-quiz">Take Quiz</a>
+    </nav>
+  </header>
+  <div id="mobile-dropdown" class="mobile-dropdown">
+    <a href="#" class="dropdown-link">Log in</a>
+    <a href="#" class="dropdown-quiz">Take Quiz</a>
+  </div>
+  <main class="main-section">
+    <div class="main-text">
+      <h1>
+        Hair care that’s<br><span class="highlight-green">scientifically</span><br/>
+        matched to <span class="highlight-purple">you</span>
+      </h1>
+      <p>No more trial and error. Our personalized analysis matches you with products containing exactly what your hair needs to thrive.</p>
+      <div class="main-buttons">
+        <a href="#" class="quiz-btn">Take the Hair Quiz →</a>
+        <a href="#" class="learn-btn">Learn more</a>
+      </div>
+    </div>
+    <div class="main-image">
+      <img src="model.jpg" alt="Hair model" />
+    </div>
+  </main>
+  <!-- Problem Solution Section -->
+  <section class="problem-section">
+    <div class="section-header">
+      <h2>We Know The Struggle—And Solved It</h2>
+      <p>Our journey to create the perfect hair care solutions started with understanding the common frustrations</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <h3>Endless Product Confusion</h3>
+        <p>We tried dozens of products – but nothing worked. The overwhelming number of options left us frustrated and confused.</p>
+      </div>
+      <div class="problem-card">
+        <h3>One Size Doesn’t Fit All</h3>
+        <p>Most products are generic – not made for your unique hair type. We discovered that different hair types need different solutions.</p>
+      </div>
+      <div class="problem-card">
+        <h3>The Real Fix? Ingredients</h3>
+        <p>We realized the problem wasn’t the product, but the wrong ingredients. Each hair type needs specific ingredients to thrive.</p>
+      </div>
+      <div class="problem-card">
+        <h3>The Solution We Built</h3>
+        <p>We created a test that studies your hair and gives real, researched suggestions – no guesswork, just scientifically matched products for your unique needs.</p>
+      </div>
+    </div>
+  </section>
+  <!-- How It Works Section -->
+  <section class="how-section">
+    <div class="section-header">
+      <h2>How It Works</h2>
+    </div>
+    <div class="how-flex">
+      <div class="how-steps">
+        <div class="how-step animate-fadeIn">
+          <div class="how-dot"></div>
+          <div>
+            <h3>STEP 1</h3>
+            <h4>Take the Hair Test</h4>
+            <p>Answer a quick, science-based quiz designed to understand your hair type, texture, scalp condition and specific concerns.</p>
+          </div>
+        </div>
+        <div class="how-step animate-fadeIn delay-100">
+          <div class="how-dot"></div>
+          <div>
+            <h3>STEP 2</h3>
+            <h4>Understand your Hair Needs</h4>
+            <p>We analyze your quick responses to identify the ingredients your hair truly needs—no guessing, just real results.</p>
+          </div>
+        </div>
+        <div class="how-step animate-fadeIn delay-200">
+          <div class="how-dot"></div>
+          <div>
+            <h3>STEP 3</h3>
+            <h4>Get Product Recommendations</h4>
+            <p>Based on your unique hair profile, we suggest effective products that include only the right ingredients—from trusted brands.</p>
+          </div>
+        </div>
+      </div>
+      <div class="how-image">
+        <img src="https://cdn-icons-png.flaticon.com/512/6868/6868209.png" alt="How it works"/>
+      </div>
+    </div>
+  </section>
+  <!-- Transformation Section -->
+  <section class="transformation-section">
+    <h2>Ready to Transform Your Hair?</h2>
+    <p>Take our scientific hair quiz and discover products matched perfectly to your unique hair needs. No more experiments, just effective results.</p>
+    <div class="transformation-buttons">
+      <button class="quiz-white-btn">Take the Hair Quiz →</button>
+      <button class="browse-btn">Browse Products</button>
+    </div>
+    <div class="transformation-stats">
+      <div><center><b>93%</b></center> of users see visible improvement</div>
+      <div><center><b>4.1/5</b></center> average customer rating</div>
+      <div><center><b>150+</b></center> customers reorder within 2 months</div>
+    </div>
+  </section>
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <h2>FAQ’s</h2>
+    <div class="faq-list" id="faq-list">
+      <div class="faq-item">
+        <div class="faq-question">What if I have allergies or ingredient sensitivities?
+          <span class="faq-toggle-icon">+</span>
+        </div>
+        <div class="faq-answer">
+          You can note them in the quiz, and we will exclude those ingredients from your personalized recommendations.
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Is this quiz suitable for all hair types?
+          <span class="faq-toggle-icon">+</span>
+        </div>
+        <div class="faq-answer">
+          Yes. The quiz is designed to cater to a wide variety of hair types and textures, ensuring personalized recommendations.
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Do I need to buy products after taking the quiz?
+          <span class="faq-toggle-icon">+</span>
+        </div>
+        <div class="faq-answer">
+          No. You can take the quiz without any obligation to purchase. It's there to help you understand your hair better.
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">What if I'm not satisfied and happy with the recommended product?
+          <span class="faq-toggle-icon">+</span>
+        </div>
+        <div class="faq-answer">
+          Customer satisfaction is important to us. If you're not seeing results, we offer guidance, support, and flexible return options to ensure you get what you truly need.
+        </div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">How soon will I see results?
+          <span class="faq-toggle-icon">+</span>
+        </div>
+        <div class="faq-answer">
+          Results may vary by person and hair type, but many users see improvement within a few weeks of using recommended products.
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+  <!-- Newsletter Subscription Section -->
+  <section class="newsletter-section">
+    <h2>Get Hair Care Tips & Updates</h2>
+    <p>Subscribe to our newsletter for expert advice, new product announcements<br class="hide-mobile"/> and personalized hair care tips.</p>
+    <form class="newsletter-form">
+      <input type="email" placeholder="Your email address" required />
+      <button type="submit">Subscribe</button>
+    </form>
+    <p class="newsletter-privacy">By subscribing, you agree to our <a href="#">Private Policy</a>. We promise not to spam you and you can unsubscribe anytime.</p>
+  </section>
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-about">
+        <h3>Effgro</h3>
+        <p>Personalized hair care crafted through science. Effgro matches your hair’s unique needs with the right ingredients for real results.</p>
+      </div>
+      <div class="footer-block">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">Hair Analysis Quiz</a></li>
+          <li><a href="#">Product Recommendations</a></li>
+          <li><a href="#">Expert Consultation</a></li>
+          <li><a href="#">Subscription Plans</a></li>
+        </ul>
+      </div>
+      <div class="footer-block">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Our Science</a></li>
+          <li><a href="#">Hair Care Blog</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-block">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Terms of Services</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Accessibility</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuBtn = document.getElementById('menu-btn');
+      const mobileDropdown = document.getElementById('mobile-dropdown');
+
+      function toggleDropdown() {
+        mobileDropdown.style.display =
+          mobileDropdown.style.display === "flex" ? "none" : "flex";
+      }
+
+      menuBtn.addEventListener('click', toggleDropdown);
+
+      // Hide mobile dropdown if user clicks outside
+      document.addEventListener('click', function (e) {
+        if (
+          !menuBtn.contains(e.target) &&
+          !mobileDropdown.contains(e.target) &&
+          window.getComputedStyle(menuBtn).display !== "none"
+        ) {
+          mobileDropdown.style.display = "none";
+        }
+      });
+
+      // Hide dropdown on desktop resize
+      window.addEventListener('resize', function () {
+        if (window.innerWidth >= 768) {
+          mobileDropdown.style.display = "none";
+        }
+      });
+
+      // Animate steps
+      setTimeout(() => {
+        document.querySelectorAll('.how-step').forEach((el, i) => {
+          el.style.opacity = 1;
+        });
+      }, 300);
+
+      // FAQ Accordion Functionality
+      const faqItems = document.querySelectorAll('.faq-item');
+      faqItems.forEach(item => {
+        item.addEventListener('click', function () {
+          // Close all other open items
+          faqItems.forEach(other => {
+            if (other !== item) {
+              other.classList.remove('open');
+            }
+          });
+          // Toggle current
+          item.classList.toggle('open');
+        });
+      });
+    });
+  </script>
+</body>
+</html>

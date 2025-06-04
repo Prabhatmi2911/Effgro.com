@@ -101,18 +101,15 @@
       color: #333;
       margin-top: 0;
     }
-    /* Special layout for four cards */
     .options-container.four-cards .option-card {
       min-width: 150px;
       max-width: 180px;
       min-height: 70px;
       padding-top: 20px;
     }
-    /* Hide radio and checkbox inputs */
     input[type="radio"], input[type="checkbox"] {
       display: none;
     }
-    /* Grid options for multiple checkboxes */
     .grid-options {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(176px, 1fr));
@@ -141,7 +138,6 @@
       margin-right: 10px;
       accent-color: #2a7a5f;
     }
-    /* Textarea */
     textarea {
       width: 100%;
       max-width: 600px;
@@ -160,11 +156,17 @@
       border-color: #2a7a5f;
       outline: none;
     }
-    /* Next button */
-    #next-btn {
+    #button-group {
       position: absolute;
       bottom: 32px;
+      left: 36px;
       right: 36px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    /* Both buttons -- same style! */
+    #prev-btn, #next-btn {
       background: linear-gradient(90deg, #2a7a5f 60%, #8ca99e 100%);
       border: none;
       border-radius: 20px;
@@ -176,12 +178,13 @@
       transition: background 0.3s, box-shadow 0.2s;
       box-shadow: 0 1.5px 6px 0 rgba(40,120,95,0.09);
     }
-    #next-btn:disabled {
+    #next-btn:disabled,
+    #prev-btn:disabled {
       background: #b5c4bb;
       cursor: not-allowed;
       opacity: 0.7;
+      color: #fff;
     }
-    /* Responsive */
     @media (max-width: 700px) {
       #quiz-container {
         padding: 28px 8px 72px 8px;
@@ -192,6 +195,11 @@
       .option-card, label.checkbox-label {
         max-width: 100%;
         min-width: 0;
+      }
+      #button-group {
+        left: 8px;
+        right: 8px;
+        bottom: 16px;
       }
     }
     @media (max-width: 460px) {
@@ -205,6 +213,16 @@
       .option-card img {
         width: 70px; height: 70px;
       }
+      #button-group {
+        flex-direction: column;
+        left: 0;
+        right: 0;
+        gap: 6px;
+      }
+      #prev-btn, #next-btn {
+        width: 100%;
+        padding: 10px 0;
+      }
     }
   </style>
 </head>
@@ -217,7 +235,10 @@
   <form id="options-form" autocomplete="off">
     <div id="options-wrapper"></div>
   </form>
-  <button id="next-btn" disabled>Next</button>
+  <div id="button-group">
+    <button id="prev-btn" type="button" disabled>Previous</button>
+    <button id="next-btn" type="button" disabled>Next</button>
+  </div>
 </div>
 <script>
 const quizPages = [
@@ -232,7 +253,8 @@ const quizPages = [
     ],
     type: "radio",
     layout: "options-container"
-  },  {
+  },
+  {
     title: "What is your natural hair type?",
     subtitle: "What does your hair look like when it's washed and air-dried?",
     options: [
@@ -277,6 +299,7 @@ const quizPages = [
     type: "radio",
     layout: "options-container"
   },
+  // Q6: Multiple select (checkbox)
   {
     title: "Which products do you currently use or plan to use?",
     subtitle: "How thick is your hair on your scalp",
@@ -288,6 +311,7 @@ const quizPages = [
     type: "radio",
     layout: "options-container"
   },
+  // Q7: Multiple select (checkbox)
   {
     title: "Do you have any scalp issues?",
     subtitle: "Like itching, flaking, dandruff, sensitivity, or excess oil on your scalp?",
@@ -301,6 +325,7 @@ const quizPages = [
     type: "radio",
     layout: "options-container"
   },
+  // Q8: Multiple select (checkbox)
   {
     title: "Have you done any chemical treatments on your hair?",
     subtitle: "This includes hair coloring, bleaching, straightening, perming, or smoothing treatments.",
@@ -413,7 +438,9 @@ const questionSubtitle = document.getElementById('question-subtitle');
 const questionDescription = document.getElementById('question-description');
 const optionsWrapper = document.getElementById('options-wrapper');
 const nextBtn = document.getElementById('next-btn');
+const prevBtn = document.getElementById('prev-btn');
 const optionsForm = document.getElementById('options-form');
+const buttonGroup = document.getElementById('button-group');
 
 let currentPage = 0;
 let answers = [];
@@ -431,6 +458,9 @@ function renderPage(pageIndex) {
   questionSubtitle.textContent = page.subtitle || '';
   questionDescription.textContent = page.description || '';
 
+  // Enable/disable Previous button
+  prevBtn.disabled = (pageIndex === 0);
+
   // Textarea
   if (page.type === 'textarea') {
     optionsWrapper.className = '';
@@ -440,8 +470,11 @@ function renderPage(pageIndex) {
     textarea.addEventListener('input', () => {
       nextBtn.disabled = textarea.value.trim().length === 0;
     });
+    if (answers[pageIndex]) {
+      textarea.value = answers[pageIndex];
+      nextBtn.disabled = textarea.value.trim().length === 0;
+    }
     optionsWrapper.appendChild(textarea);
-    nextBtn.disabled = true;
     return;
   }
 
@@ -459,6 +492,11 @@ function renderPage(pageIndex) {
       input.name = 'option';
       input.value = typeof opt === 'string' ? opt : opt.text || opt;
       input.id = `option-${idx}`;
+      // Restore previous answer
+      if (answers[pageIndex] && answers[pageIndex].includes(input.value)) {
+        input.checked = true;
+        label.classList.add('selected');
+      }
       input.addEventListener('change', () => {
         updateCheckboxSelection();
         const checked = optionsForm.querySelectorAll('input[type="checkbox"]:checked').length;
@@ -471,9 +509,12 @@ function renderPage(pageIndex) {
       label.appendChild(span);
       optionsWrapper.appendChild(label);
     });
-    nextBtn.disabled = true;
+    // Restore nextBtn state
+    const checked = optionsForm.querySelectorAll('input[type="checkbox"]:checked').length;
+    nextBtn.disabled = checked === 0;
     return;
   }
+
   // Radio buttons
   optionsWrapper.className = page.layout === 'four-cards' ? 'options-container four-cards' : (page.layout || 'options-container');
   page.options.forEach((opt, idx) => {
@@ -487,10 +528,16 @@ function renderPage(pageIndex) {
     input.name = 'option';
     input.value = typeof opt === 'string' ? opt : opt.text || opt;
     input.id = `option-${idx}`;
+    // Restore previous answer
+    if (answers[pageIndex] && answers[pageIndex] === input.value) {
+      input.checked = true;
+      label.classList.add('selected');
+      nextBtn.disabled = false;
+    }
     input.addEventListener('change', () => {
       updateRadioSelection();
       nextBtn.disabled = false;
- });
+    });
     label.appendChild(input);
     if (typeof opt === 'object' && opt.img) {
       const img = document.createElement('img');
@@ -504,7 +551,7 @@ function renderPage(pageIndex) {
 
     optionsWrapper.appendChild(label);
   });
-  nextBtn.disabled = true;
+  if (!answers[pageIndex]) nextBtn.disabled = true; // Only enable Next if an answer is present
 }
 function updateRadioSelection() {
   // Remove selected from all, add to checked
@@ -544,6 +591,14 @@ nextBtn.addEventListener('click', (e) => {
     renderPage(currentPage);
   }
 });
+
+prevBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  if (currentPage === 0) return;
+  currentPage--;
+  renderPage(currentPage);
+});
+
 function showResults() {
   quizContainer.innerHTML = `
     <h1 style="margin-top: 120px; font-size: 2rem;">Thank you for completing your quiz!</h1>
